@@ -1613,11 +1613,17 @@ function updateAllUI(budget) {
   }
 
   // Custom Cashflow Amount and Percentage
+  const displayCashflowAmt = budget.custom_allocations
+    ? budget.custom_allocations.monthly_cashflow
+    : budget.recommended_allocations.monthly_cashflow;
+  const displayCashflowPct = budget.custom_allocations
+    ? budget.custom_cashflow_pct
+    : budget.recommended_cashflow_pct;
   document.getElementById("customCashflowAmount").textContent = formatCurrency(
-    budget.recommended_allocations.monthly_cashflow || 0,
+    displayCashflowAmt || 0,
   );
   document.getElementById("customCashflowPercentage").textContent = `(${(
-    budget.recommended_cashflow_pct || 0
+    displayCashflowPct || 0
   ).toFixed(1)}%)`;
 
   // === START: CTA DISPLAY LOGIC ===
