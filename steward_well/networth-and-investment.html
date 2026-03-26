@@ -332,6 +332,20 @@
         /* dark color */
       }
 
+      /* Match budget calculator tooltip visual style */
+      #tooltip,
+      [id$="Tooltip"] {
+        background: #dbece6 !important;
+        color: #000 !important;
+        font-family: "General Sans", sans-serif;
+        font-weight: 400;
+      }
+
+      #tooltip > div,
+      [id$="Tooltip"] > div {
+        border-top-color: #dbece6 !important;
+      }
+
       #print-download-btn svg {
         color: #fff !important;
         stroke: #fff !important;
@@ -639,6 +653,11 @@
                   <div class="flex flex-col">
                     <h2 class="text-xl lg:text-[1.8rem] font-medium text-white">
                       Networth Calculator
+                      <span
+                        id="networthCalcTooltipToggle"
+                        class="relative inline-block ml-1 cursor-help group align-middle"
+                      >
+                      </span>
                     </h2>
                   </div>
                 </div>
@@ -693,7 +712,7 @@
                   <span class="lg:text-lg text-sm font-medium text-gray-700"
                     >View yearly growth/decline</span
                   >
-                  <div class="relative group cursor-help">
+                  <div class="relative group cursor-help group">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -742,6 +761,11 @@
                 >
                   <h2 class="font-medium text-lg lg:text-[1.5rem]">
                     Your Assets
+                    <span
+                      id="yourAssetsTooltipToggle"
+                      class="relative inline-block ml-1 cursor-help group align-middle"
+                    >
+                    </span>
                   </h2>
                   <svg
                     class="w-5 h-5 category-arrow transition-transform duration-300"
@@ -768,8 +792,35 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Registered retirement savings</label
-                        >
+                          >Registered retirement savings
+                          <span
+                            id="tooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="tooltip"
+                              class="absolute top-full left-0 mt-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Your RRSP balance — includes employer and personal
+                              contributions to registered retirement savings
+                              plans.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="registered-retirement"
                           type="number"
@@ -800,8 +851,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Home value</label
-                        >
+                          >Home value
+                          <span
+                            id="homeValueTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="homeValueTooltip"
+                              class="absolute top-full left-0 mt-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              The current estimated market value of your primary
+                              residence.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="home-value"
                           type="number"
@@ -832,8 +909,33 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Tax-free savings accounts (TFSA)</label
-                        >
+                          >Tax-free savings accounts (TFSA)
+                          <span
+                            id="tfsaTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="tfsaTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Total balance in your Tax-Free Savings Accounts.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="tfsa-accounts"
                           type="number"
@@ -864,8 +966,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Other properties</label
-                        >
+                          >Other properties
+                          <span
+                            id="otherPropertiesTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="otherPropertiesTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Market value of any additional real estate you own
+                              (rental, cottage, land, etc.).
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="other-properties"
                           type="number"
@@ -896,8 +1024,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Non-registered savings and investments</label
-                        >
+                          >Non-registered savings and investments
+                          <span
+                            id="nonRegisteredTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="nonRegisteredTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Savings and investments held outside of registered
+                              accounts (RRSP, TFSA).
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="non-registered-investments"
                           type="number"
@@ -928,8 +1082,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Other valuables</label
-                        >
+                          >Other valuables
+                          <span
+                            id="otherValueableTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="otherValuableTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Value of other significant assets such as
+                              vehicles, jewelry, art, or collectibles.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="other-valuables"
                           type="number"
@@ -969,6 +1149,11 @@
                 >
                   <h2 class="font-medium text-lg lg:text-[1.5rem]">
                     Your Liabilities
+                    <span
+                      id="yourLiabilitiesTooltipToggle"
+                      class="relative inline-block ml-1 cursor-help group align-middle"
+                    >
+                    </span>
                   </h2>
                   <svg
                     class="w-5 h-5 category-arrow transition-transform duration-300"
@@ -995,8 +1180,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Home mortgage</label
-                        >
+                          >Home mortgage
+                          <span
+                            id="homeMortgageTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="homeMortgageTooltip"
+                              class="absolute top-full left-0 mt-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              The remaining balance on your primary home
+                              mortgage.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="home-mortgage"
                           type="number"
@@ -1027,8 +1238,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Other mortgages</label
-                        >
+                          >Other mortgages
+                          <span
+                            id="otherMortgagesTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="otherMortgagesTooltip"
+                              class="absolute top-full left-0 mt-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Outstanding balances on mortgages for other
+                              properties.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="other-mortgages"
                           type="number"
@@ -1059,8 +1296,33 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Credit cards</label
-                        >
+                          >Credit cards
+                          <span
+                            id="creditCardsTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="creditCardsTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Total outstanding credit card balances.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="credit-cards"
                           type="number"
@@ -1091,8 +1353,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Lines of credit</label
-                        >
+                          >Lines of credit
+                          <span
+                            id="linesOfCreditTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="linesOfCreditTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Outstanding balances on personal or home equity
+                              lines of credit.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="lines-of-credit"
                           type="number"
@@ -1123,8 +1411,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Loans</label
-                        >
+                          >Loans
+                          <span
+                            id="loansTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="loansTooltip"
+                              class="absolute top-full left-0 mt-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Outstanding balances on personal, auto, or student
+                              loans.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="loans"
                           type="number"
@@ -1155,8 +1469,34 @@
                       <div class="input-group">
                         <label
                           class="block text-sm font-medium text-gray-300 mb-2"
-                          >Others</label
-                        >
+                          >Others
+                          <span
+                            id="otherLiabTooltipToggle"
+                            class="relative inline-block ml-1 cursor-help group"
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4 text-gray-400 inline"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                            </svg>
+                            <div
+                              id="otherLiabTooltip"
+                              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                            >
+                              Any other debts or financial obligations not
+                              listed above.
+                              <div
+                                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                              ></div></div></span
+                        ></label>
                         <input
                           id="other-liabilities"
                           type="number"
@@ -1222,10 +1562,9 @@
                 <label class="block text-sm font-medium text-gray-300 mb-2">
                   Starting Amount ($)
                   <span
-                    id="starting-amount-tooltip"
+                    id="startingAmtTooltipToggle"
                     class="relative inline-block ml-1 cursor-help group"
-                  >
-                    <svg
+                    ><svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -1239,16 +1578,16 @@
                         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
                       />
                     </svg>
-                    <span
-                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none text-center"
+                    <div
+                      id="startingAmtTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
                     >
                       Auto-calculated from your Registered Retirement Savings,
                       TFSA, and Non-Registered Savings & Investments.
-                      <span
+                      <div
                         class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
-                      ></span>
-                    </span>
-                  </span>
+                      ></div></div
+                  ></span>
                 </label>
                 <input
                   id="investment-starting-amount"
@@ -1260,8 +1599,34 @@
 
               <div id="field-years" class="relative w-full z-20">
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Number of years</label
-                >
+                  >Number of years
+                  <span
+                    id="yearsTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="yearsTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      How long you plan to invest. Longer periods generally
+                      benefit more from compound growth.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <button
                   id="yearsDropdownBtn"
                   type="button"
@@ -1298,8 +1663,34 @@
 
               <div id="field-return-rate" class="input-group">
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Rate of return (%)</label
-                >
+                  >Rate of return (%)
+                  <span
+                    id="returnRateTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="returnRateTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      The expected annual percentage return on your investments.
+                      Historical stock market averages around 7–10%.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <input
                   id="investment-return-rate"
                   type="number"
@@ -1308,10 +1699,37 @@
                 />
               </div>
 
-              <div id="field-compound" class="relative w-full z-10">
+              <div id="field-compound" class="relative w-full z-40">
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Compound</label
-                >
+                  >Compound
+                  <span
+                    id="compoundTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="compoundTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      How often your interest is calculated and added to your
+                      balance. More frequent compounding grows your money
+                      faster.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <button
                   id="compoundDropdownBtn"
                   type="button"
@@ -1348,8 +1766,34 @@
 
               <div id="field-contribution" class="input-group">
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Additional contribution ($)</label
-                >
+                  >Additional contribution ($)
+                  <span
+                    id="contributionTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="contributionTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      The amount you plan to add regularly to your investment on
+                      top of the starting amount.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <input
                   id="investment-contribution"
                   type="number"
@@ -1360,11 +1804,37 @@
 
               <div
                 id="field-contribute-at"
-                class="relative w-full z-0 opacity-50 pointer-events-none transition-opacity duration-300"
+                class="relative w-full z-40 opacity-50 transition-opacity duration-300"
               >
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Frequency</label
-                >
+                  >Frequency
+                  <span
+                    id="frequencyTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="frequencyTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      When your additional contributions are applied — at the
+                      beginning or end of each period.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <button
                   id="calculateDropdownBtn"
                   type="button"
@@ -1401,8 +1871,34 @@
 
               <div id="field-target" class="input-group hidden">
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Your target ($)</label
-                >
+                  >Your target ($)
+                  <span
+                    id="targetTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="targetTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      The investment goal you want to reach over the specified
+                      time period.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <input
                   id="investment-target"
                   type="number"
@@ -1417,8 +1913,34 @@
                 class="relative w-full z-30 col-span-2 max-md:col-span-1"
               >
                 <label class="block text-sm font-medium text-gray-300 mb-2"
-                  >Calculator type</label
-                >
+                  >Calculate:
+                  <span
+                    id="calcTypeTooltipToggle"
+                    class="relative inline-block ml-1 cursor-help group"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400 inline"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <div
+                      id="calcTypeTooltip"
+                      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-[120] text-center"
+                    >
+                      Choose which value to calculate: end balance, required
+                      contribution, expected return rate, or investment length.
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white"
+                      ></div></div></span
+                ></label>
                 <button
                   id="calculatorTypeBtn"
                   type="button"
@@ -1478,7 +2000,7 @@
 
           <div
             id="projection-toggle-container"
-            class="flex items-center justify-between mb-4"
+            class="flex items-center justify-between"
           >
             <span class="text-gray-700 font-medium lg:text-lg text-sm"
               >View yearly growth projections</span
@@ -1588,19 +2110,11 @@
                 class="px-3 py-2 bg-[#eef5f1] rounded-lg text-sm text-slate-800 border-none focus:outline-none focus:ring-2 focus:ring-[#165a38]"
               >
                 <option value="1">1 Year</option>
-                <option value="2">2 Years</option>
                 <option value="3">3 Years</option>
-                <option value="4">4 Years</option>
                 <option value="5" selected>5 Years</option>
-                <option value="6">6 Years</option>
-                <option value="7">7 Years</option>
-                <option value="8">8 Years</option>
-                <option value="9">9 Years</option>
                 <option value="10">10 Years</option>
-                <option value="12">12 Years</option>
                 <option value="15">15 Years</option>
                 <option value="20">20 Years</option>
-                <option value="25">25 Years</option>
                 <option value="30">30 Years</option>
               </select>
             </div>

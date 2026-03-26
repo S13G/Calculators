@@ -299,6 +299,16 @@ document.addEventListener("DOMContentLoaded", () => {
         display.textContent = item;
         display.style.color = "#111827";
         closeList(list);
+
+        // Sync years dropdown → projection years selector
+        if (config.displayId === "yearsDropdownSelected") {
+          const barChartYears = document.getElementById("barChartYears");
+          if (barChartYears) {
+            const yearVal = parseInt(item) || 5;
+            barChartYears.value = yearVal;
+          }
+        }
+
         // Trigger investment recalculation
         if (typeof updateInvestmentCalculation === "function")
           updateInvestmentCalculation();
@@ -471,17 +481,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ========== 4. TOOLTIPS (unified) ==========
   const tooltipPairs = [
+    // Container headings
+    ["networthCalcTooltipToggle", "networthCalcTooltip"],
+    ["yourAssetsTooltipToggle", "yourAssetsTooltip"],
+    ["yourLiabilitiesTooltipToggle", "yourLiabilitiesTooltip"],
+    ["growNetworthTooltipToggle", "growNetworthTooltip"],
+    // Asset fields
     ["tooltipToggle", "tooltip"],
     ["tfsaTooltipToggle", "tfsaTooltip"],
     ["nonRegisteredTooltipToggle", "nonRegisteredTooltip"],
     ["homeValueTooltipToggle", "homeValueTooltip"],
     ["otherPropertiesTooltipToggle", "otherPropertiesTooltip"],
     ["otherValueableTooltipToggle", "otherValuableTooltip"],
+    // Liability fields
     ["homeMortgageTooltipToggle", "homeMortgageTooltip"],
     ["otherMortgagesTooltipToggle", "otherMortgagesTooltip"],
     ["creditCardsTooltipToggle", "creditCardsTooltip"],
     ["linesOfCreditTooltipToggle", "linesOfCreditTooltip"],
     ["loansTooltipToggle", "loansTooltip"],
+    ["otherLiabTooltipToggle", "otherLiabTooltip"],
+    // Investment fields
+    ["startingAmtTooltipToggle", "startingAmtTooltip"],
+    ["yearsTooltipToggle", "yearsTooltip"],
+    ["returnRateTooltipToggle", "returnRateTooltip"],
+    ["compoundTooltipToggle", "compoundTooltip"],
+    ["contributionTooltipToggle", "contributionTooltip"],
+    ["frequencyTooltipToggle", "frequencyTooltip"],
+    ["targetTooltipToggle", "targetTooltip"],
+    ["calcTypeTooltipToggle", "calcTypeTooltip"],
   ]
     .map(([tId, ttId]) => ({
       toggle: document.getElementById(tId),

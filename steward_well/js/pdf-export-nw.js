@@ -110,6 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading();
         try {
           await generateNetworthReport();
+        } catch (error) {
+          console.error("PDF generation error:", error);
+          alert(
+            "We could not generate your PDF right now. Please try again in a moment.",
+          );
         } finally {
           hideLoading();
         }
@@ -210,6 +215,27 @@ async function generateNetworthReport() {
     return document.getElementById(id)?.textContent?.trim() || "";
   }
 
+  async function renderChartImage(config, width = 1100, height = 620) {
+    if (typeof Chart === "undefined") return null;
+
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    const tempCtx = tempCanvas.getContext("2d");
+    if (!tempCtx) return null;
+
+    config = JSON.parse(JSON.stringify(config));
+    if (!config.options) config.options = {};
+    config.options.responsive = false;
+    config.options.animation = false;
+
+    const chart = new Chart(tempCtx, config);
+    await new Promise((r) => setTimeout(r, 50));
+    const imgData = tempCanvas.toDataURL("image/png");
+    chart.destroy();
+    return imgData;
+  }
+
   // ========== Page 1: Networth Summary ==========
   drawHeader("Networth & Investment Report");
 
@@ -264,14 +290,15 @@ async function generateNetworthReport() {
   y += lineH * 2;
 
   // ========== Investment Projection ==========
-  sectionTitle("Investment Projection");
-
   const startAmt = getVal("investment-starting-amount");
   const returnRate = getVal("investment-return-rate");
   const contribution = getVal("investment-contribution");
   const yearsText = getText("yearsDropdownSelected");
   const compoundText = getText("compoundDropdownSelected");
   const freqText = getText("calculateDropdownSelected");
+  const yearsNum = parseInt(yearsText) || 5;
+
+  sectionTitle(yearsNum + "-Year Investment Projection");
 
   row("Starting Amount", fmt(startAmt));
   row("Rate of Return", returnRate + "%");
@@ -288,18 +315,270 @@ async function generateNetworthReport() {
   y += 4;
   row("Ending Balance", getText("inv-total"), true);
 
-  // ========== Capture chart as image ==========
-  const canvas = document.getElementById("investmentChart");
-  if (canvas) {
+  // ========== Render both charts for PDF ==========
+  // --- Pie Chart with percentages & amounts ---
+  if (typeof Chart !== "undefined") {
+    // Build an offscreen pie chart with percentage + amount labels
+
+    const startVal =
+      parseFloat(getText("inv-starting").replace(/[^0-9.-]/g, "")) || 0;
+    const interestVal =
+      parseFloat(getText("inv-interest").replace(/[^0-9.-]/g, "")) || 0;
+    const contribVal =
+      parseFloat(getText("inv-contrib").replace(/[^0-9.-]/g, "")) || 0;
+    const totalVal = startVal + interestVal + contribVal;
+    const startPct =
+      totalVal > 0 ? ((startVal / totalVal) * 100).toFixed(1) : 0;
+    const intPct =
+      totalVal > 0 ? ((interestVal / totalVal) * 100).toFixed(1) : 0;
+    const contPct =
+      totalVal > 0 ? ((contribVal / totalVal) * 100).toFixed(1) : 0;
+
+    const CHART_COLORS = {
+      starting: "#2563EB",
+      interest: "#60A5FA",
+      contrib: "#86EFAC",
+    };
+
+    const pieChartConfig = {
+      type: "pie",
+      data: {
+        labels: [
+          "Starting amount (" + startPct + "%) — " + fmt(startVal),
+          "Interest earned (" + intPct + "%) — " + fmt(interestVal),
+          "Total contributions (" + contPct + "%) — " + fmt(contribVal),
+        ],
+        datasets: [
+          {
+            data: [startVal, interestVal, contribVal],
+            backgroundColor: [
+              CHART_COLORS.starting,
+              CHART_COLORS.interest,
+              CHART_COLORS.contrib,
+            ],
+            borderWidth: 0,
+            hoverOffset: 4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+              font: { size: 14 },
+              padding: 12,
+              usePointStyle: true,
+            },
+          },
+          tooltip: { enabled: false },
+        },
+      },
+    };
+
+    const pieImgData = await renderChartImage(pieChartConfig);
+
     try {
-      ensureSpace(14);
-      const imgData = canvas.toDataURL("image/png");
-      const chartW = pageW - marginX * 2;
-      const chartH = chartW * 0.5;
-      doc.addImage(imgData, "PNG", marginX, y, chartW, chartH);
-      y += chartH + 16;
+      if (pieImgData) {
+        ensureSpace(18);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(green.r, green.g, green.b);
+        doc.text("Investment Breakdown", marginX, y);
+        y += lineH;
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+
+        const chartW = pageW - marginX * 2;
+        const chartH = chartW * 0.55;
+        doc.addImage(pieImgData, "PNG", marginX, y, chartW, chartH);
+        y += chartH + 16;
+      }
     } catch (e) {
-      // Chart not available or tainted canvas
+      // canvas tainted or not available
+    }
+  }
+
+  // --- Bar Chart with x/y axes ---
+  if (typeof Chart !== "undefined") {
+    // Check if we need a new page
+    if (y + 250 > pageH - bottomMargin) {
+      doc.addPage();
+      drawHeader("Networth & Investment Report");
+      y = topY;
+    }
+
+    const CHART_COLORS = {
+      starting: "#2563EB",
+      interest: "#60A5FA",
+      contrib: "#86EFAC",
+    };
+
+    // Build bar chart data
+    const annualRate = (parseFloat(returnRate) || 0) / 100;
+    const compoundMap = {
+      Monthly: 12,
+      Quarterly: 4,
+      "Semi-Annually": 2,
+      Annually: 1,
+    };
+    const compoundPerYear = compoundMap[compoundText] || 1;
+    const timingMap = {
+      "Beginning of each month": "beginning",
+      "End of each month": "end",
+      "Beginning of each year": "year-beginning",
+      "End of each year": "year-end",
+    };
+    const timing = timingMap[freqText] || "beginning";
+
+    const displayYears = Math.min(yearsNum, 30);
+    const maxBars = Math.min(displayYears, 10);
+
+    function calcCompound(pv, contrib, rate, yrs, cpd, timingVal) {
+      const rComp = rate / cpd;
+      const nComp = cpd * yrs;
+      const fvPV = pv * Math.pow(1 + rComp, nComp);
+      let fvAnnuity = 0;
+      let totalContrib = 0;
+      if (contrib > 0) {
+        const isMonthly = timingVal === "beginning" || timingVal === "end";
+        let rC, nC, pmt;
+        if (isMonthly) {
+          rC = Math.pow(1 + rComp, cpd / 12) - 1;
+          nC = 12 * yrs;
+          pmt = contrib;
+        } else {
+          rC = Math.pow(1 + rComp, cpd) - 1;
+          nC = yrs;
+          pmt = contrib;
+        }
+        totalContrib = pmt * nC;
+        if (rC > 0) {
+          fvAnnuity = pmt * ((Math.pow(1 + rC, nC) - 1) / rC);
+          if (timingVal === "beginning" || timingVal === "year-beginning")
+            fvAnnuity *= 1 + rC;
+        } else {
+          fvAnnuity = totalContrib;
+        }
+      }
+      const end = fvPV + fvAnnuity;
+      return {
+        startingAmount: pv,
+        totalContributions: totalContrib,
+        totalInterest: Math.max(0, end - pv - totalContrib),
+        endBalance: end,
+      };
+    }
+
+    const yearlyData = [];
+    for (let i = 1; i <= maxBars; i++) {
+      const scaledYear =
+        displayYears <= 10 ? i : Math.round((i / maxBars) * displayYears);
+      const res = calcCompound(
+        startAmt,
+        contribution,
+        annualRate,
+        scaledYear,
+        compoundPerYear,
+        timing,
+      );
+      yearlyData.push({ year: scaledYear, ...res });
+    }
+
+    const barChartConfig = {
+      type: "bar",
+      data: {
+        labels: yearlyData.map((d) => "Year " + d.year),
+        datasets: [
+          {
+            label: "Starting amount",
+            data: yearlyData.map((d) => d.startingAmount),
+            backgroundColor: CHART_COLORS.starting,
+            stack: "s0",
+          },
+          {
+            label: "Interest earned",
+            data: yearlyData.map((d) => d.totalInterest),
+            backgroundColor: CHART_COLORS.interest,
+            stack: "s0",
+          },
+          {
+            label: "Total contributions",
+            data: yearlyData.map((d) => d.totalContributions),
+            backgroundColor: CHART_COLORS.contrib,
+            stack: "s0",
+            borderRadius: { topLeft: 4, topRight: 4 },
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        scales: {
+          x: {
+            grid: { display: false },
+            title: {
+              display: true,
+              text: "Years",
+              font: { size: 13, weight: "bold" },
+            },
+            ticks: {
+              font: { size: 12 },
+            },
+          },
+          y: {
+            border: { display: true },
+            grid: { color: "#e5e7eb" },
+            title: {
+              display: true,
+              text: "Balance ($)",
+              font: { size: 13, weight: "bold" },
+            },
+            ticks: {
+              callback: (v) =>
+                v >= 1000 ? "$" + (v / 1000).toFixed(0) + "k" : "$" + v,
+              font: { size: 12 },
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: "bottom",
+            labels: { font: { size: 12 }, padding: 10, usePointStyle: true },
+          },
+          tooltip: { enabled: false },
+        },
+      },
+    };
+
+    const barImgData = await renderChartImage(barChartConfig);
+
+    try {
+      if (barImgData) {
+        ensureSpace(18);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(green.r, green.g, green.b);
+        doc.text("Yearly Growth Projection", marginX, y);
+        y += lineH;
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+
+        const chartW = pageW - marginX * 2;
+        const chartH = chartW * 0.55;
+        doc.addImage(barImgData, "PNG", marginX, y, chartW, chartH);
+        y += chartH + 16;
+      }
+    } catch (e) {
+      // canvas tainted or not available
     }
   }
 

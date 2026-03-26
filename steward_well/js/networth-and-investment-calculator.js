@@ -71,11 +71,21 @@ document.addEventListener("DOMContentLoaded", function () {
   // ========== Conditional Visibility ==========
   function updateFrequencyVisibility() {
     if (!frequencyField) return;
+    const frequencyBtn = document.getElementById("calculateDropdownBtn");
+    const frequencyOptions = document.getElementById(
+      "customCalculationTimeOptions",
+    );
     const contrib = parseFloat(contributionInput?.value) || 0;
     if (contrib > 0) {
-      frequencyField.classList.remove("opacity-50", "pointer-events-none");
+      frequencyField.classList.remove("opacity-50");
+      if (frequencyBtn) frequencyBtn.classList.remove("pointer-events-none");
+      if (frequencyOptions)
+        frequencyOptions.classList.remove("pointer-events-none");
     } else {
-      frequencyField.classList.add("opacity-50", "pointer-events-none");
+      frequencyField.classList.add("opacity-50");
+      if (frequencyBtn) frequencyBtn.classList.add("pointer-events-none");
+      if (frequencyOptions)
+        frequencyOptions.classList.add("pointer-events-none");
     }
   }
 
@@ -268,6 +278,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
 
+    if (typeof Chart !== "undefined" && Chart.getChart) {
+      const existingChart = Chart.getChart(canvas);
+      if (existingChart) existingChart.destroy();
+    }
     if (investmentChartInstance) investmentChartInstance.destroy();
 
     const {
@@ -318,6 +332,8 @@ document.addEventListener("DOMContentLoaded", function () {
         plugins: {
           legend: { display: false },
           tooltip: {
+            titleFont: { size: 13 },
+            bodyFont: { size: 13 },
             callbacks: {
               label: (ctx) => {
                 const label = ctx.label || "";
@@ -342,6 +358,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
 
+    if (typeof Chart !== "undefined" && Chart.getChart) {
+      const existingChart = Chart.getChart(canvas);
+      if (existingChart) existingChart.destroy();
+    }
     if (investmentChartInstance) investmentChartInstance.destroy();
 
     const {
@@ -411,14 +431,17 @@ document.addEventListener("DOMContentLoaded", function () {
         scales: {
           x: {
             grid: { display: false },
-            title: { display: true, text: "Years", font: { size: 10 } },
+            title: { display: true, text: "Years", font: { size: 12 } },
+            ticks: {
+              font: { size: 12 },
+            },
           },
           y: {
             border: { display: false },
             grid: { color: "#f3f4f6" },
             ticks: {
               callback: (v) => (v >= 1000 ? "$" + v / 1000 + "k" : "$" + v),
-              font: { size: 10 },
+              font: { size: 12 },
             },
           },
         },
@@ -427,6 +450,9 @@ document.addEventListener("DOMContentLoaded", function () {
           tooltip: {
             mode: "index",
             intersect: false,
+            titleFont: { size: 13 },
+            bodyFont: { size: 13 },
+            footerFont: { size: 13 },
             callbacks: {
               label: (ctx) => ctx.dataset.label + ": " + fmt(ctx.parsed.y),
               footer: (items) => {
@@ -453,8 +479,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // Bar chart years dropdown
   if (barChartYearsSelect) {
     barChartYearsSelect.addEventListener("change", () => {
-      const toggle = document.getElementById("chart-projection-toggle");
-      if (toggle && toggle.checked) renderInvestmentBarChart();
+      // Sync projection years → number of years dropdown
+      const selectedVal = parseInt(barChartYearsSelect.value) || 5;
+      const yearsLabel = selectedVal === 1 ? "1 Year" : selectedVal + " Years";
+      if (yearsDisplay) {
+        yearsDisplay.textContent = yearsLabel;
+        yearsDisplay.style.color = "#111827";
+      }
+
+      // Recalculate and re-render
+      if (typeof updateInvestmentCalculation === "function")
+        updateInvestmentCalculation();
     });
   }
 
